@@ -15,13 +15,17 @@ from tails.utils import check_if_in_radius, get_lat_and_lon_of_given_postcode
 @api_view(['GET'])
 def stores(request):
     """Return list of stores ordered by postcode and name.
+    This uses limitofsetpagination so that it can serve for both backend task and frontend
+    task. Using limit result set can be limited to the any number. Three suggestion can be load
+    as user type in and same result can be used to display first result, and for lazy load
+    there can be another call without specifiying limit.
 
     Example Response:
         [{
             'name': 'St_Albans',
             'postcode': 'AL12RJ',
             'latitude': '51.741753',
-            'longitude': '-0.341337',   
+            'longitude': '-0.341337',
         }]
     """
     search = request.GET.get('search')
@@ -32,13 +36,15 @@ def stores(request):
             Q(name__contains=search) or
             Q(postcode__contains=search)
         )
+        queryset = queryset.order_by('postcode', 'name')
 
-    queryset = queryset.order_by('postcode', 'name')
-    if request.GET.get('limit'):
-        page = paginator.paginate_queryset(queryset)
-        if page is not None:
-            serializer = StoreSerializer(page, many=True)
-            return paginator.get_paginated_response(serializer.data)
+        if request.GET.get('limit'):
+            page = paginator.paginate_queryset(queryset)
+            if page is not None:
+                serializer = StoreSerializer(page, many=True)
+                return paginator.get_paginated_response(serializer.data)
+    else:
+        queryset = queryset.order_by('name')
 
     serializer = StoreSerializer(queryset, many=True)
     return Response(serializer.data)
