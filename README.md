@@ -35,9 +35,12 @@ http://localhost:8000/stores/
 
 ## Questions
 ### Tell us what test you completed (backend or full-stack)
-* Both
+* Backend
 
 ### Tell us what you'd have changed if you'd have had more time?
+* I'd have done full stack task as well.
+* I was planning to use stores api endpoint for both backend and full stack task. More info can be found on docstring.
+* If I had time to do frontend task, I'd have done it using Vuejs. Though, the right decision would be using pure js, html, css for this lightweight task.
 * Use flask instead of Django
 * Make it production ready
 * Load stores in parallel
